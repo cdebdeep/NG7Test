@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import {IEmployee} from '../employee';
+import {EmployeeDataService} from '../employee-data.service'
 
 
 @Component({
@@ -17,13 +18,12 @@ import {IEmployee} from '../employee';
 })
 export class EmployeeListComponent implements OnInit {
   public employess:IEmployee[];
-  constructor() { }
+  constructor(private empDataSrv:EmployeeDataService) {
+
+   }
 
   ngOnInit() {
-    this.employess=[
-      {id:1,name:'Andy', age:20,status:true},
-      {id:2,name:'July', age:18,status:true}
-    ]
+    this.empDataSrv.getData().subscribe(data=>this.employess=data);
     }
 
 }

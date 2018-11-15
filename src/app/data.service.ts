@@ -5,7 +5,6 @@ import {HttpClient} from '@angular/common/http';
   providedIn: 'root'
 })
 export class DataService {
-
   constructor(private httpclient : HttpClient) { }
   getData(){
    return this.httpclient.get('https://reqres.in/api/users');
