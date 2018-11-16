@@ -1,27 +1,52 @@
-import { Component, OnInit } from '@angular/core';
-import {IEmployee} from '../employee'
+import { Component, OnInit, OnChanges, Input,Output,EventEmitter,SimpleChanges,SimpleChange } from '@angular/core';
+import {IEmployee} from '../employee';
+import {IEmployeeDetailView} from '../employeeDetailView';
+import {EmployeeDataService} from '../employee-data.service'
+import { AngularWaitBarrier } from 'blocking-proxy/built/lib/angular_wait_barrier';
 
 @Component({
   selector: 'app-employee-detail',
-  /*templateUrl: './employee-detail.component.html',*/
-  template : `<h2>Employee Details</h2> 
-  <ul *ngIf="employess">
-  <li *ngFor="let emp of employess">
-  <b>{{emp.id}}.{{emp.name}} {{emp.age}} {{emp.status}}</b>
-  </li>
-  </ul> 
-  `,
+  templateUrl: './employee-detail.component.html', 
   styleUrls: ['./employee-detail.component.css']
 })
-export class EmployeeDetailComponent implements OnInit {
-  public employess:IEmployee[];
-  constructor() { }
+export class EmployeeDetailComponent implements OnChanges, OnInit  {
+  
+  ngOnChanges(changes: SimpleChanges): void {
+    const emp:SimpleChange=changes.selEmp;
+    if((emp.currentValue!=undefined) && (this.employess!=undefined)) {
+      console.log(emp.currentValue.name);
+      this.employess.forEach(e => {
+        if(e.name==emp.currentValue.name){
+          e.seleted=true;
+        }else{
+          e.seleted=false;
+        }
+      });
+    }     
+  }
 
   ngOnInit() {
-    this.employess=[
-      {id:1,name:'Andy',age:20,status:true},
-      {id:1,name:'July',age:18,status:true}
-    ]
+    this.empDataSrv.getData().subscribe(
+      data=>(
+        data.forEach(d=>{
+          let empDetailview : IEmployeeDetailView = new IEmployeeDetailView();
+          empDetailview.name=d.name;
+          empDetailview.age=d.age;
+          empDetailview.id=d.id;
+          empDetailview.status=d.status;
+          empDetailview.seleted=false;
+          this.employess.push(empDetailview);
+        })
+      )
+      );
   }
+  
+  public employess:IEmployeeDetailView[]=[];
+  @Input() private selEmp:IEmployee;
+  
+
+  constructor(private empDataSrv:EmployeeDataService) { }
+
+  
 
 }

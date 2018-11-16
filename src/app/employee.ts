@@ -1,6 +1,6 @@
-export interface IEmployee{
+export class IEmployee{
     id:number;
-    name:string,
-    age:number,
+    name:string;
+    age:number;
     status:boolean
 }
