@@ -1,7 +1,8 @@
 import { Injectable } from '@angular/core';
 import {IEmployee} from './employee';
-import {HttpClient} from '@angular/common/http';
+import {HttpClient,HttpErrorResponse} from '@angular/common/http';
 import {Observable } from 'rxjs';
+import  {catchError} from 'rxjs/operators';
 
 
 @Injectable({
@@ -13,6 +14,7 @@ export class EmployeeDataService {
   constructor(private httpClient:HttpClient) {     
   }
   getData():Observable<IEmployee[]>{
-   return this.httpClient.get<IEmployee[]>(this.url);
+   return this.httpClient.get<IEmployee[]>(this.url);                    
+              
   }
 }
